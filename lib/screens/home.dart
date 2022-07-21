@@ -49,14 +49,14 @@ class MyHomePage extends StatelessWidget {
             case CounterStatus.success:
               {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                  SnackBar(
                     content: Text(
-                      'Count has been changed',
-                      style: TextStyle(
+                      counterType.value == CounterType.increment ? 'Count Incremented + 1' : 'Count Decremented - 1',
+                      style: const TextStyle(
                         color: Colors.white,
                       ),
                     ),
-                    duration: Duration(seconds: 1),
+                    duration: const Duration(seconds: 1),
                     backgroundColor: Colors.black,
                   ),
                 );
