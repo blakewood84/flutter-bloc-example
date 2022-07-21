@@ -8,6 +8,10 @@ class CounterEvent extends Equatable {
 }
 
 // These empty classes are events. These are the same as Action Types in Redux.
-class Increment extends CounterEvent {}
+class Increment extends CounterEvent {
+  const Increment();
+}
 
-class Decrement extends CounterEvent {}
+class Decrement extends CounterEvent {
+  const Decrement();
+}

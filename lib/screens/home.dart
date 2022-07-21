@@ -9,8 +9,12 @@ extension Log on Object {
   void log() => devtools.log(toString());
 }
 
+enum CounterType { increment, decrement }
+
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  MyHomePage({Key? key}) : super(key: key);
+
+  final ValueNotifier<CounterType> counterType = ValueNotifier(CounterType.increment);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +51,7 @@ class MyHomePage extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text(
-                      'Incremented by +1',
+                      'Count has been changed',
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -91,22 +95,47 @@ class MyHomePage extends StatelessWidget {
                 Text(
                   state.count.toString(),
                   style: const TextStyle(color: Colors.amberAccent, fontSize: 24),
-                )
+                ),
+                const SizedBox(height: 20),
+                ValueListenableBuilder<CounterType>(
+                    valueListenable: counterType,
+                    builder: (context, CounterType value, widget) {
+                      return ElevatedButton(
+                        onPressed: () {
+                          if (value == CounterType.increment) counterType.value = CounterType.decrement;
+                          if (value == CounterType.decrement) counterType.value = CounterType.increment;
+                        },
+                        child: Text(
+                          value == CounterType.increment ? 'Change to Decrement' : 'Change to Increment',
+                        ),
+                      );
+                    })
               ],
             ),
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          final loading = context.read<CounterBloc>().state.status == CounterStatus.loading;
+      floatingActionButton: ValueListenableBuilder<CounterType>(
+        valueListenable: counterType,
+        builder: (context, CounterType value, widget) {
+          return FloatingActionButton(
+            onPressed: () {
+              final loading = context.read<CounterBloc>().state.status == CounterStatus.loading;
 
-          // Don't allow button to be pressed unless loading is finished
-          if (!loading) {
-            context.read<CounterBloc>().add(Increment());
-          }
+              // Don't allow button to be pressed unless loading is finished
+              if (!loading) {
+                // Send action here by .add() to the CounterBloc
+                context.read<CounterBloc>().add(
+                      value == CounterType.increment ? const Increment() : const Decrement(),
+                    );
+              }
+            },
+            child: Icon(
+              // Change icon here depending on counter type
+              value == CounterType.increment ? Icons.add : Icons.remove,
+            ),
+          );
         },
-        child: const Icon(Icons.add),
       ),
     );
   }

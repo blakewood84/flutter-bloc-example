@@ -1,8 +1,9 @@
-import 'package:bloc_example/bloc/counter_bloc.dart';
-import 'package:bloc_example/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc_example/screens/home.dart';
+import 'package:bloc_example/bloc/counter_bloc.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark(),
       home: MultiBlocProvider(
         providers: [BlocProvider(create: (_) => CounterBloc())],
-        child: const MyHomePage(),
+        child: MyHomePage(),
       ),
     );
   }
